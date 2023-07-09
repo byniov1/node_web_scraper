@@ -44,18 +44,19 @@ async function start() {
         movieArray.push(movies)
     }
 
+    const ParseFLoatRating = (obj) => parseFloat(obj.rating.replace(',', '.')) 
+    
     // console.log(movieArray)
     const mergedArray = movieArray.reduce((acc, curr) => acc.concat(curr), [])
-    console.log(mergedArray)
+    // console.log(mergedArray)
 
     const filteredArray = mergedArray.reduce((acc, curr) => {
         const existingObject = acc.find(obj => obj.name === curr.name)
 
-        const ParseFLoat = (obj) => parseFloat(obj.rating.replace(',', '.')) 
 
         if(!existingObject){
             acc.push(curr)
-        } else if (ParseFLoat(curr) > ParseFLoat(existingObject)){
+        } else if (ParseFLoatRating(curr) > ParseFLoatRating(existingObject)){
             existingObject.rating = curr.rating;
             existingObject.vodServiceName = curr.vodServiceName;
         }
@@ -63,8 +64,10 @@ async function start() {
         return acc;
     }, [])
 
-    console.log(filteredArray)
+    // console.log(filteredArray)
 
+    const sortedArray = filteredArray.sort((a, b) => ParseFLoatRating(b) - ParseFLoatRating(a))
+    console.log(sortedArray)
     await browser.close();
 }
 
