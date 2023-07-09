@@ -16,7 +16,7 @@ async function start() {
         })
     })
 
-    const x = []
+    let movieArray = [];
     for(const link of ProviderListLink){
         await Promise.all([
             page.goto(`${baseUrl}${link.providerLink}`),
@@ -30,23 +30,24 @@ async function start() {
         const info = await page.$eval('div.page__subtitle', el => el.textContent);
         console.log(info)
     
-        const movies = await page.evaluate(() => {
-            const movieElements = [...document.querySelectorAll('div.rankingType[itemprop="itemListElement"]')]
+        const movies = await page.$$eval('div.rankingType[itemprop="itemListElement"]', (elements, providerName) => {
+            const movieSliced = elements.slice(0, 10);
     
-            const movieSliced = movieElements.slice(0, 10)
             return movieSliced.map(element => {
                 const rating = element.querySelector('.rankingType__rate--value').innerText;
-                const name = element.querySelector('.rankingType__title a').innerText
+                const name = element.querySelector('.rankingType__title a').innerText;
     
-                return { rating, name }
-            })
-        });
-        x.push(movies)
-        console.log(movies)
+                return { rating, name, vodServiceName: providerName };
+            });
+        }, link.providerName);
+    
+        movieArray.push(movies)
     }
 
+    // console.log(movieArray)
+    const mergedArray = movieArray.reduce((acc, curr) => acc.concat(curr), [])
+    console.log(mergedArray)
 
-    console.log(x)
     await browser.close();
 }
 
