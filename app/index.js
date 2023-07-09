@@ -10,7 +10,6 @@ async function start() {
     let movieArray = [];
 
     const ProviderListLink = await fetchVodProviders(page)
-
     for (const provider of ProviderListLink) {
         await scrapTopMovies(page, provider, movieArray)
     }
@@ -36,7 +35,7 @@ function convertAndSaveToCSV(array){
     })
 }
 
-async function fetchVodProviders(page) {
+export async function fetchVodProviders(page) {
     const ProviderListLink = await page.evaluate(() => {
         const providerElements = Array.from(document.querySelectorAll('.rankingProvider__item')).slice(0, 4);
 
