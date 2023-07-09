@@ -48,6 +48,23 @@ async function start() {
     const mergedArray = movieArray.reduce((acc, curr) => acc.concat(curr), [])
     console.log(mergedArray)
 
+    const filteredArray = mergedArray.reduce((acc, curr) => {
+        const existingObject = acc.find(obj => obj.name === curr.name)
+
+        const ParseFLoat = (obj) => parseFloat(obj.rating.replace(',', '.')) 
+
+        if(!existingObject){
+            acc.push(curr)
+        } else if (ParseFLoat(curr) > ParseFLoat(existingObject)){
+            existingObject.rating = curr.rating;
+            existingObject.vodServiceName = curr.vodServiceName;
+        }
+
+        return acc;
+    }, [])
+
+    console.log(filteredArray)
+
     await browser.close();
 }
 
