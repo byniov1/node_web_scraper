@@ -1,23 +1,40 @@
 import puppeteer from "puppeteer";
+import fs from 'fs';
+
 const baseUrl = 'https://www.filmweb.pl';
 
 async function start() {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(`${baseUrl}/ranking/vod/film`)
+    let movieArray = [];
 
     const ProviderListLink = await fetchVodProviders(page)
 
-    let movieArray = [];
     for (const provider of ProviderListLink) {
         await scrapTopMovies(page, provider, movieArray)
     }
-    const x = mergeDeduplicateSort(movieArray)
-    console.log(x);
+    movieArray = mergeDeduplicateSort(movieArray)
+    convertAndSaveToCSV(movieArray)
 
     await browser.close();
 }
 start();
+
+
+function convertAndSaveToCSV(array){    
+    const names = Object.keys(array[0]);
+    let result = names.join(',') + '\n';
+    array.forEach(element => result += names.map(name => element[name].replace(',', '.')) + '\n')
+
+    fs.writeFile('movies.csv' , result, (err) => {
+        if(err){
+            console.error('Error writing file' , err)
+        } else {
+            console.log('CSV file was created')
+        }
+    })
+}
 
 async function fetchVodProviders(page) {
     const ProviderListLink = await page.evaluate(() => {
@@ -49,10 +66,10 @@ async function scrapTopMovies(page, provider, array) {
         const movieSliced = elements.slice(0, 10);
 
         return movieSliced.map(element => {
-            const rating = element.querySelector('.rankingType__rate--value').innerText;
             const name = element.querySelector('.rankingType__title a').innerText;
+            const rating = element.querySelector('.rankingType__rate--value').innerText;
 
-            return { rating, name, vodServiceName: providerName };
+            return {  name, rating, vodServiceName: providerName };
         });
     }, provider.providerName);
 
