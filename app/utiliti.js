@@ -57,7 +57,7 @@ export async function scrapTopMovies(page, provider, array) {
 
 const ParseFLoatRating = (obj) => parseFloat(obj.rating.replace(',', '.'))
 
-function mergeArray(array) {
+export function mergeArray(array) {
     return array.reduce((acc, curr) => acc.concat(curr), [])
 }
 
