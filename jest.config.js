@@ -1,9 +1,9 @@
-module.exports = {
+export default {
     transform: {
         '^.+\\.js$': 'babel-jest'
     },
     testPathIgnorePatterns: [
         '/node_modules/',
-        '/app/',
+        '/index\\.js$'
     ],
 };

@@ -1,5 +1,5 @@
-const puppeteer = require('puppeteer');
-import {fetchVodProviders} from '../app/index.js'
+import puppeteer from 'puppeteer';
+import {fetchVodProviders} from '../app/utiliti'
 
 const baseUrl = 'https://www.filmweb.pl';
 let browser;

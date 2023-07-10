@@ -1,6 +1,6 @@
 //For testing
 
-const moviesAfterScrap = [
+export const moviesAfterScrap = [
   [
     { rating: '7,35', name: 'Nimona', vodServiceName: 'Netflix' },
     { rating: '7,29', name: 'Fenomen', vodServiceName: 'Netflix' },
@@ -34,6 +34,7 @@ const moviesAfterScrap = [
     }
   ],
   [
+    // { rating: '8,35', name: 'Nimona', vodServiceName: 'HBO Max' },
     {
       rating: '6,70',
       name: 'Na planie serialu "The Last of Us"',
